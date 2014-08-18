@@ -268,6 +268,7 @@ class elasticsearch(
   # configuration
   class { 'elasticsearch::config': }
 
+  # Hiera support for instances
   validate_bool($instances_hiera_merge)
 
   if $instances_hiera_merge == true
@@ -280,6 +281,21 @@ class elasticsearch(
     validate_hash($instances)
     create_resources('::elasticsearch::instance', $x_instances)
   }
+
+  # Hiera support for plugins
+  validate_bool($pluginss_hiera_merge)
+
+  if $pluginss_hiera_merge == true
+    $x_plugins = hiera_hash('elasticsearch::plugins', $::elasticsearch::plugins)
+  } else {
+    $x_plugins = $plugins
+  }
+
+  if $x_plugins {
+    validate_hash($plugins)
+    create_resources('::elasticsearch::plugin', $x_plugins)
+  }
+
 
   if $java_install == true {
     # Install java
