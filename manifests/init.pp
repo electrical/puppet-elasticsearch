@@ -273,7 +273,7 @@ class elasticsearch(
   # Hiera support for instances
   validate_bool($instances_hiera_merge)
 
-  if $instances_hiera_merge == true
+  if $instances_hiera_merge == true {
     $x_instances = hiera_hash('elasticsearch::instances', $::elasticsearch::instances)
   } else {
     $x_instances = $instances
@@ -287,7 +287,7 @@ class elasticsearch(
   # Hiera support for plugins
   validate_bool($plugins_hiera_merge)
 
-  if $plugins_hiera_merge == true
+  if $plugins_hiera_merge == true {
     $x_plugins = hiera_hash('elasticsearch::plugins', $::elasticsearch::plugins)
   } else {
     $x_plugins = $plugins
