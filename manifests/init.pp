@@ -281,7 +281,7 @@ class elasticsearch(
 
   if $x_instances {
     validate_hash($instances)
-    create_resources('::elasticsearch::instance', $x_instances)
+    create_resources('elasticsearch::instance', $x_instances)
   }
 
   # Hiera support for plugins
@@ -295,7 +295,7 @@ class elasticsearch(
 
   if $x_plugins {
     validate_hash($plugins)
-    create_resources('::elasticsearch::plugin', $x_plugins)
+    create_resources('elasticsearch::plugin', $x_plugins)
   }
 
 
