@@ -1,13 +1,13 @@
 {
-  "name": "elasticsearch-elasticsearch",
+  "name": "electrical-elasticsearch",
   "version": "0.10.3",
-  "source": "https://github.com/elastic/puppet-elasticsearch",
-  "author": "elasticsearch",
+  "source": "https://github.com/electrical/puppet-elasticsearch",
+  "author": "Richard Pijnenburg",
   "license": "Apache-2.0",
   "summary": "Module for managing and configuring Elasticsearch nodes",
   "description": "Module for managing and configuring Elasticsearch nodes",
-  "project_page": "https://github.com/elastic/puppet-elasticsearch",
-  "issues_url": "https://github.com/elastic/puppet-elasticsearch/issues",
+  "project_page": "https://github.com/electrical/puppet-elasticsearch",
+  "issues_url": "https://github.com/electrical/puppet-elasticsearch/issues",
   "dependencies": [
     {
       "name": "puppetlabs/stdlib",

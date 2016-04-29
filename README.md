@@ -524,10 +524,3 @@ Other distro's that have been reported to work:
 * Scientific 6
 
 Testing on other platforms has been light and cannot be guaranteed.
-
-##Development
-
-
-##Support
-
-Need help? Join us in [#elasticsearch](https://webchat.freenode.net?channels=%23elasticsearch) on Freenode IRC or on the [discussion forum](https://discuss.elastic.co/).
