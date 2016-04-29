@@ -81,7 +81,7 @@ define elasticsearch::plugin(
   $install_options = undef
 ) {
 
-  include elasticsearch
+  include ::elasticsearch
 
   $notify_service = $elasticsearch::restart_on_change ? {
     false   => undef,
@@ -126,6 +126,9 @@ define elasticsearch::plugin(
 
   } elsif ($url != undef) {
     validate_string($url)
+    $file_source = undef
+  } else {
+    $file_source = undef
   }
 
   case $ensure {

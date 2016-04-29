@@ -330,10 +330,10 @@ class elasticsearch(
   #### Manage actions
 
   # package(s)
-  class { 'elasticsearch::package': }
+  class { '::elasticsearch::package': }
 
   # configuration
-  class { 'elasticsearch::config': }
+  class { '::elasticsearch::config': }
 
   # Hiera support for instances
   validate_bool($instances_hiera_merge)
@@ -346,7 +346,7 @@ class elasticsearch(
 
   if $x_instances {
     validate_hash($x_instances)
-    create_resources('elasticsearch::instance', $x_instances)
+    create_resources('::elasticsearch::instance', $x_instances)
   }
 
   # Hiera support for plugins
@@ -360,7 +360,7 @@ class elasticsearch(
 
   if $x_plugins {
     validate_hash($x_plugins)
-    create_resources('elasticsearch::plugin', $x_plugins)
+    create_resources('::elasticsearch::plugin', $x_plugins)
   }
 
 
@@ -383,7 +383,7 @@ class elasticsearch(
       # use anchor for ordering
 
       # Set up repositories
-      class { 'elasticsearch::repo': }
+      class { '::elasticsearch::repo': }
 
       # Ensure that we set up the repositories before trying to install
       # the packages
@@ -398,7 +398,7 @@ class elasticsearch(
         stage { $repo_stage:  before => Stage['main'] }
       }
 
-      class { 'elasticsearch::repo':
+      class { '::elasticsearch::repo':
         stage => $repo_stage,
       }
     }
@@ -412,15 +412,15 @@ class elasticsearch(
     Anchor['elasticsearch::begin']
     -> Class['elasticsearch::package']
     -> Class['elasticsearch::config']
-    -> Elasticsearch::Plugin <| |>
-    -> Elasticsearch::Instance <| |>
-    -> Elasticsearch::Template <| |>
+    -> Elasticsearch::Plugin<| |>
+    -> Elasticsearch::Instance<| |>
+    -> Elasticsearch::Template<| |>
 
   } else {
 
     # make sure all services are getting stopped before software removal
     Anchor['elasticsearch::begin']
-    -> Elasticsearch::Instance <| |>
+    -> Elasticsearch::Instance<| |>
     -> Class['elasticsearch::config']
     -> Class['elasticsearch::package']
 

@@ -30,3 +30,6 @@ gem 'puppet-lint-trailing_comma-check', :require => false
 gem 'puppet-lint-leading_zero-check', :require => false
 gem 'puppet-lint-file_ensure-check', :require => false
 gem 'puppet-lint-empty_string-check', :require => false
+gem 'puppet-lint-resource_reference_syntax', :require => false
+gem 'puppet-lint-absolute_classname-check', :require => false
+gem 'puppet-lint-classes_and_types_beginning_with_digits-check', :require => false

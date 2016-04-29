@@ -164,23 +164,26 @@ class elasticsearch::params {
       $pid_dir            = '/var/run/elasticsearch'
 
       if versioncmp($::operatingsystemmajrelease, '7') >= 0 {
-        $init_template     = 'elasticsearch.systemd.erb'
-        $service_providers = 'systemd'
+        $init_template        = 'elasticsearch.systemd.erb'
+        $service_providers    = 'systemd'
+        $systemd_service_path = '/lib/systemd/system'
       } else {
-        $init_template     = 'elasticsearch.RedHat.erb'
-        $service_providers = 'init'
+        $init_template        = 'elasticsearch.RedHat.erb'
+        $service_providers    = 'init'
+        $systemd_service_path = undef
       }
 
     }
     'Amazon': {
-      $service_name       = 'elasticsearch'
-      $service_hasrestart = true
-      $service_hasstatus  = true
-      $service_pattern    = $service_name
-      $defaults_location  = '/etc/sysconfig'
-      $pid_dir            = '/var/run/elasticsearch'
-      $init_template      = 'elasticsearch.RedHat.erb'
-      $service_providers  = 'init'
+      $service_name         = 'elasticsearch'
+      $service_hasrestart   = true
+      $service_hasstatus    = true
+      $service_pattern      = $service_name
+      $defaults_location    = '/etc/sysconfig'
+      $pid_dir              = '/var/run/elasticsearch'
+      $init_template        = 'elasticsearch.RedHat.erb'
+      $service_providers    = 'init'
+      $systemd_service_path = undef
     }
     'Debian': {
       $service_name       = 'elasticsearch'
@@ -189,13 +192,15 @@ class elasticsearch::params {
       $service_pattern    = $service_name
       $defaults_location  = '/etc/default'
       if versioncmp($::operatingsystemmajrelease, '8') >= 0 {
-        $init_template     = 'elasticsearch.systemd.erb'
-        $service_providers = 'systemd'
-        $pid_dir           = '/var/run/elasticsearch'
+        $init_template        = 'elasticsearch.systemd.erb'
+        $service_providers    = 'systemd'
+        $pid_dir              = '/var/run/elasticsearch'
+        $systemd_service_path = '/lib/systemd/system'
       } else {
-        $init_template     = 'elasticsearch.Debian.erb'
-        $service_providers = [ 'init' ]
-        $pid_dir           = false
+        $init_template        = 'elasticsearch.Debian.erb'
+        $service_providers    = 'init'
+        $pid_dir              = false
+        $systemd_service_path = '/lib/systemd/system'
       }
     }
     'Ubuntu': {
@@ -206,13 +211,15 @@ class elasticsearch::params {
       $defaults_location  = '/etc/default'
 
       if versioncmp($::operatingsystemmajrelease, '15') >= 0 {
-        $init_template     = 'elasticsearch.systemd.erb'
-        $service_providers = 'systemd'
-        $pid_dir           = '/var/run/elasticsearch'
+        $init_template        = 'elasticsearch.systemd.erb'
+        $service_providers    = 'systemd'
+        $pid_dir              = '/var/run/elasticsearch'
+        $systemd_service_path = '/lib/systemd/system'
       } else {
-        $init_template     = 'elasticsearch.Debian.erb'
-        $service_providers = [ 'init' ]
-        $pid_dir           = false
+        $init_template        = 'elasticsearch.Debian.erb'
+        $service_providers    = 'init'
+        $pid_dir              = false
+        $systemd_service_path = undef
       }
     }
     'Darwin': {
@@ -233,6 +240,12 @@ class elasticsearch::params {
       $defaults_location  = '/etc/sysconfig'
       $init_template      = 'elasticsearch.systemd.erb'
       $pid_dir            = '/var/run/elasticsearch'
+
+      if versioncmp($::operatingsystemmajrelease, '12') <= 0 {
+        $systemd_service_path = '/lib/systemd/system'
+      } else {
+        $systemd_service_path = '/usr/lib/systemd/system'
+      }
     }
     'Gentoo': {
       $service_name       = 'elasticsearch'
