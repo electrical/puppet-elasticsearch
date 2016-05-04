@@ -177,8 +177,4 @@ describe "Hiera tests" do
 
   end
 
-  after do
-    write_hiera_config([])
-  end
-
 end
