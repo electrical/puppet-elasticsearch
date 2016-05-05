@@ -1,12 +1,10 @@
 require 'spec_helper_acceptance'
 
-describe "Elasticsearch class:" do
-
+describe 'Elasticsearch class:' do
   shell("mkdir -p #{default['distmoduledir']}/another/files")
   shell("cp #{test_settings['local']} #{default['distmoduledir']}/another/files/#{test_settings['puppet']}")
 
-  context "install via http resource" do
-
+  context 'install via http resource' do
     it 'should run successfully' do
       pp = "class { 'elasticsearch': package_url => '#{test_settings['url']}', java_install => true, config => { 'node.name' => 'elasticsearch001', 'cluster.name' => '#{test_settings['cluster_name']}' } }
             elasticsearch::instance{ 'es-01': }
@@ -15,7 +13,6 @@ describe "Elasticsearch class:" do
       # Run it twice and test for idempotency
       apply_manifest(pp, :catch_failures => true)
       expect(apply_manifest(pp, :catch_failures => true).exit_code).to be_zero
-
     end
 
     describe package(test_settings['package_name']) do
@@ -35,10 +32,9 @@ describe "Elasticsearch class:" do
       it { should be_enabled }
       it { should be_running }
     end
-
   end
 
-  context "Clean" do
+  context 'Clean' do
     it 'should run successfully' do
       pp = "class { 'elasticsearch': ensure => 'absent' }
             elasticsearch::instance{ 'es-01': ensure => 'absent' }
@@ -55,11 +51,9 @@ describe "Elasticsearch class:" do
       it { should_not be_enabled }
       it { should_not be_running }
     end
-
   end
 
-  context "Install via local file resource" do
-
+  context 'Install via local file resource' do
     it 'should run successfully' do
       pp = "class { 'elasticsearch': package_url => 'file:#{test_settings['local']}', java_install => true, config => { 'node.name' => 'elasticsearch001', 'cluster.name' => '#{test_settings['cluster_name']}' } }
             elasticsearch::instance{ 'es-01': }
@@ -68,7 +62,6 @@ describe "Elasticsearch class:" do
       # Run it twice and test for idempotency
       apply_manifest(pp, :catch_failures => true)
       expect(apply_manifest(pp, :catch_failures => true).exit_code).to be_zero
-
     end
 
     describe package(test_settings['package_name']) do
@@ -88,10 +81,9 @@ describe "Elasticsearch class:" do
       it { should be_enabled }
       it { should be_running }
     end
-
   end
 
-  context "Clean" do
+  context 'Clean' do
     it 'should run successfully' do
       pp = "class { 'elasticsearch': ensure => 'absent' }
             elasticsearch::instance{ 'es-01': ensure => 'absent' }
@@ -108,11 +100,9 @@ describe "Elasticsearch class:" do
       it { should_not be_enabled }
       it { should_not be_running }
     end
-
   end
 
-  context "Install via Puppet resource" do
-
+  context 'Install via Puppet resource' do
     it 'should run successfully' do
       pp = "class { 'elasticsearch': package_url => 'puppet:///modules/another/#{test_settings['puppet']}', java_install => true, config => { 'node.name' => 'elasticsearch001', 'cluster.name' => '#{test_settings['cluster_name']}' } }
             elasticsearch::instance { 'es-01': }
@@ -121,7 +111,6 @@ describe "Elasticsearch class:" do
       # Run it twice and test for idempotency
       apply_manifest(pp, :catch_failures => true)
       expect(apply_manifest(pp, :catch_failures => true).exit_code).to be_zero
-
     end
 
     describe package(test_settings['package_name']) do
@@ -141,10 +130,9 @@ describe "Elasticsearch class:" do
       it { should be_enabled }
       it { should be_running }
     end
-
   end
 
-  context "Clean" do
+  context 'Clean' do
     it 'should run successfully' do
       pp = "class { 'elasticsearch': ensure => 'absent' }
             elasticsearch::instance{ 'es-01': ensure => 'absent' }
@@ -161,7 +149,5 @@ describe "Elasticsearch class:" do
       it { should_not be_enabled }
       it { should_not be_running }
     end
-
   end
-
 end

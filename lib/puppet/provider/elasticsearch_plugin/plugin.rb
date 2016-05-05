@@ -1,4 +1,4 @@
-$LOAD_PATH.unshift(File.join(File.dirname(__FILE__),"..","..",".."))
+$LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', '..', '..'))
 
 Puppet::Type.type(:elasticsearch_plugin).provide(:plugin) do
   desc "A provider for the resource type `elasticsearch_plugin`,
@@ -16,15 +16,15 @@ Puppet::Type.type(:elasticsearch_plugin).provide(:plugin) do
 
   def exists?
     es_version
-    if !File.exists?(pluginfile)
+    if !File.exist?(pluginfile)
       debug "Plugin file #{pluginfile} does not exist"
       return false
-    elsif File.exists?(pluginfile) && readpluginfile != pluginfile_content
+    elsif File.exist?(pluginfile) && readpluginfile != pluginfile_content
       debug "Got #{readpluginfile} Expected #{pluginfile_content}. Removing for reinstall"
-      self.destroy
+      destroy
       return false
     else
-      debug "Plugin exists"
+      debug 'Plugin exists'
       return true
     end
   end
@@ -32,7 +32,7 @@ Puppet::Type.type(:elasticsearch_plugin).provide(:plugin) do
   def pluginfile_content
     return @resource[:name] if is1x?
 
-    if @resource[:name].split("/").count == 1 # Official plugin
+    if @resource[:name].split('/').count == 1 # Official plugin
       version = plugin_version(@resource[:name])
       return "#{@resource[:name]}/#{version}"
     else
@@ -56,30 +56,30 @@ Puppet::Type.type(:elasticsearch_plugin).provide(:plugin) do
   end
 
   def install1x
-    if !@resource[:url].nil?
-      commands = [ plugin_name(@resource[:name]), '--url', @resource[:url] ]
-    elsif !@resource[:source].nil?
-      commands = [ plugin_name(@resource[:name]), '--url', "file://#{@resource[:source]}" ]
-    else
-      commands = [ @resource[:name] ]
-    end
+    commands = if !@resource[:url].nil?
+                 [plugin_name(@resource[:name]), '--url', @resource[:url]]
+               elsif !@resource[:source].nil?
+                 [plugin_name(@resource[:name]), '--url', "file://#{@resource[:source]}"]
+               else
+                 [@resource[:name]]
+               end
     commands
   end
 
   def install2x
-    if !@resource[:url].nil?
-      commands = [ @resource[:url] ]
-    elsif !@resource[:source].nil?
-      commands = [ "file://#{@resource[:source]}" ]
-    else
-      commands = [ @resource[:name] ]
-    end
+    commands = if !@resource[:url].nil?
+                 [@resource[:url]]
+               elsif !@resource[:source].nil?
+                 ["file://#{@resource[:source]}"]
+               else
+                 [@resource[:name]]
+               end
     commands
   end
 
   def install_options
     return @resource[:install_options].join(' ') if @resource[:install_options].is_a?(Array)
-    return @resource[:install_options]
+    @resource[:install_options]
   end
 
   def create
@@ -92,7 +92,7 @@ Puppet::Type.type(:elasticsearch_plugin).provide(:plugin) do
     commands << install1x if is1x?
     commands << install2x if is2x?
     debug("Commands: #{commands.inspect}")
-    
+
     retry_count = 3
     retry_times = 0
     begin
@@ -148,24 +148,20 @@ Puppet::Type.type(:elasticsearch_plugin).provide(:plugin) do
     (Puppet::Util::Package.versioncmp(@es_version, '2.2.0') >= 0) && (Puppet::Util::Package.versioncmp(@es_version, '3.0.0') < 0)
   end
 
-
   def plugin_version(plugin_name)
     vendor, plugin, version = plugin_name.split('/')
     return @es_version if is2x? && version.nil?
     return version.scan(/\d+\.\d+\.\d+(?:\-\S+)?/).first unless version.nil?
-    return false
+    false
   end
 
   def plugin_name(plugin_name)
-
     vendor, plugin, version = plugin_name.split('/')
 
     endname = vendor if plugin.nil? # If its a single name plugin like the ES 2.x official plugins
     endname = plugin.gsub(/(elasticsearch-|es-)/, '') unless plugin.nil?
 
     return endname.downcase if is2x?
-    return endname
-
+    endname
   end
-
 end

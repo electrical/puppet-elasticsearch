@@ -1,9 +1,7 @@
 require 'spec_helper_acceptance'
 
-describe "elasticsearch class:" do
-
-  describe "Setup" do
-
+describe 'elasticsearch class:' do
+  describe 'Setup' do
     it 'should run successfully' do
       pp = "class { 'elasticsearch': config => { 'cluster.name' => '#{test_settings['cluster_name']}'}, manage_repo => true, repo_version => '#{test_settings['repo_version']}', java_install => true }
             elasticsearch::instance { 'es-01': config => { 'node.name' => 'elasticsearch001', 'http.port' => '#{test_settings['port_a']}' } }
@@ -16,8 +14,7 @@ describe "elasticsearch class:" do
     end
   end
 
-  describe "First removal of instance 1" do
-
+  describe 'First removal of instance 1' do
     it 'should run successfully' do
       pp = "class { 'elasticsearch': config => { 'cluster.name' => '#{test_settings['cluster_name']}'}, manage_repo => true, repo_version => '#{test_settings['repo_version']}', java_install => true }
             elasticsearch::instance{ 'es-01': ensure => 'absent' }
@@ -26,11 +23,9 @@ describe "elasticsearch class:" do
 
       apply_manifest(pp, :catch_failures => true)
     end
-
   end
 
-  describe "Second removal of instance 1" do
-
+  describe 'Second removal of instance 1' do
     it 'should run successfully' do
       pp = "class { 'elasticsearch': config => { 'cluster.name' => '#{test_settings['cluster_name']}'}, manage_repo => true, repo_version => '#{test_settings['repo_version']}', java_install => true }
             elasticsearch::instance{ 'es-01': ensure => 'absent' }
@@ -39,11 +34,9 @@ describe "elasticsearch class:" do
 
       apply_manifest(pp, :catch_failures => true)
     end
-
   end
 
-  describe "First removal of the rest" do
-
+  describe 'First removal of the rest' do
     it 'should run successfully' do
       pp = "class { 'elasticsearch': ensure => 'absent' }
             elasticsearch::instance{ 'es-02': ensure => 'absent' }
@@ -51,11 +44,9 @@ describe "elasticsearch class:" do
 
       apply_manifest(pp, :catch_failures => true)
     end
-
   end
 
-  describe "Second removal of the rest" do
-
+  describe 'Second removal of the rest' do
     it 'should run successfully' do
       pp = "class { 'elasticsearch': ensure => 'absent' }
             elasticsearch::instance{ 'es-02': ensure => 'absent' }
@@ -63,7 +54,5 @@ describe "elasticsearch class:" do
 
       apply_manifest(pp, :catch_failures => true)
     end
-
   end
-
 end

@@ -1,9 +1,7 @@
 require 'spec_helper_acceptance'
 
-describe "Integration testing" do
-
-  describe "Setup Elasticsearch" do
-
+describe 'Integration testing' do
+  describe 'Setup Elasticsearch' do
     it 'should run successfully' do
       pp = "class { 'elasticsearch': config => { 'cluster.name' => '#{test_settings['cluster_name']}'}, java_install => true, package_url => '#{test_settings['snapshot_package']}' }
             elasticsearch::instance { 'es-01': config => { 'node.name' => 'elasticsearch001', 'http.port' => '#{test_settings['port_a']}' } }
@@ -13,7 +11,6 @@ describe "Integration testing" do
       apply_manifest(pp, :catch_failures => true)
       expect(apply_manifest(pp, :catch_failures => true).exit_code).to be_zero
     end
-
 
     describe service(test_settings['service_name_a']) do
       it { should be_enabled }
@@ -29,7 +26,7 @@ describe "Integration testing" do
       its(:content) { should match /[0-9]+/ }
     end
 
-    describe "Elasticsearch serves requests on" do
+    describe 'Elasticsearch serves requests on' do
       it {
         curl_with_retries("check ES on #{test_settings['port_a']}", default, "http://localhost:#{test_settings['port_a']}/?pretty=true", 0)
       }
@@ -43,13 +40,10 @@ describe "Integration testing" do
     describe file('/usr/share/elasticsearch/templates_import') do
       it { should be_directory }
     end
-
   end
 
-  describe "Plugin tests" do
-
-    describe "Install a plugin from official repository" do
-
+  describe 'Plugin tests' do
+    describe 'Install a plugin from official repository' do
       it 'should run successfully' do
         pp = "class { 'elasticsearch': config => { 'cluster.name' => '#{test_settings['cluster_name']}'}, java_install => true, package_url => '#{test_settings['snapshot_package']}' }
               elasticsearch::instance { 'es-01': config => { 'node.name' => 'elasticsearch001', 'http.port' => '#{test_settings['port_a']}' } }
@@ -77,15 +71,12 @@ describe "Integration testing" do
       end
 
       it 'make sure the directory exists' do
-        shell("ls /usr/share/elasticsearch/plugins/#{ENV['PLUGIN_NAME']}", {:acceptable_exit_codes => 0})
+        shell("ls /usr/share/elasticsearch/plugins/#{ENV['PLUGIN_NAME']}", :acceptable_exit_codes => 0)
       end
 
       it 'make sure elasticsearch reports it as existing' do
         curl_with_retries('validated plugin as installed', default, "http://localhost:#{test_settings['port_a']}/_nodes/?plugin | grep #{ENV['PLUGIN_NAME']}", 0)
       end
-
     end
-
   end
-
 end

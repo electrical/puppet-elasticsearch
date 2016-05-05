@@ -1,9 +1,7 @@
 require 'spec_helper_acceptance'
 
-describe "elasticsearch class:" do
-
-  describe "Setup single instance" do
-
+describe 'elasticsearch class:' do
+  describe 'Setup single instance' do
     it 'should run successfully' do
       pp = "class { 'elasticsearch': config => { 'cluster.name' => 'foobar' }, manage_repo => true, repo_version => '#{test_settings['repo_version']}', java_install => true }
             elasticsearch::instance { 'es-01': config => { 'node.name' => 'elasticsearch001', 'http.port' => '#{test_settings['port_a']}', 'node.master' => true, 'node.data' => false, 'index' => { 'routing' => { 'allocation' => { 'include' => 'tag1', 'exclude' => [ 'tag2', 'tag3' ] } } }, 'node' => { 'rack' => 46 }, 'boostrap.mlockall' => true, 'cluster.name' => '#{test_settings['cluster_name']}' } }
@@ -13,7 +11,6 @@ describe "elasticsearch class:" do
       apply_manifest(pp, :catch_failures => true)
       expect(apply_manifest(pp, :catch_failures => true).exit_code).to be_zero
     end
-
 
     describe service(test_settings['service_name_a']) do
       it { should be_enabled }
@@ -29,7 +26,7 @@ describe "elasticsearch class:" do
       its(:content) { should match /[0-9]+/ }
     end
 
-    describe "Elasticsearch serves requests on" do
+    describe 'Elasticsearch serves requests on' do
       it {
         curl_with_retries("check ES on #{test_settings['port_a']}", default, "http://localhost:#{test_settings['port_a']}/?pretty=true", 0)
       }
@@ -56,11 +53,9 @@ describe "elasticsearch class:" do
     describe file('/etc/elasticsearch/es-01/scripts') do
       it { should be_symlink }
     end
-
   end
 
-  describe "Cleanup" do
-
+  describe 'Cleanup' do
     it 'should run successfully' do
       pp = "class { 'elasticsearch': ensure => 'absent' }
             elasticsearch::instance{ 'es-01': ensure => 'absent' }
@@ -77,7 +72,5 @@ describe "elasticsearch class:" do
       it { should_not be_enabled }
       it { should_not be_running }
     end
-
   end
-
 end

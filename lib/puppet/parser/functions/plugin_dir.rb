@@ -3,10 +3,9 @@ module Puppet::Parser::Functions
     Extracts the end plugin directory of the name
     EOS
   ) do |arguments|
-
-    if arguments.size < 1 then
-      raise(Puppet::ParseError, "plugin_dir(): No arguments given")
-    elsif arguments.size > 2 then
+    if arguments.empty?
+      raise(Puppet::ParseError, 'plugin_dir(): No arguments given')
+    elsif arguments.size > 2
       raise(Puppet::ParseError, "plugin_dir(): Too many arguments given (#{arguments.size})")
     else
 
@@ -15,23 +14,23 @@ module Puppet::Parser::Functions
       end
 
       plugin_name = arguments[0]
-      items = plugin_name.split("/")
+      items = plugin_name.split('/')
 
       if items.count == 1
         endname = items[0]
       elsif items.count > 1
         plugin = items[1]
-        if plugin.include?('-') # example elasticsearch-head
-          if plugin.start_with?('elasticsearch-')
-            endname = plugin.gsub('elasticsearch-', '')
-          elsif plugin.start_with?('es-')
-            endname = plugin.gsub('es-', '')
-          else
-            endname = plugin
-          end
-        else
-          endname = plugin
-        end
+        endname = if plugin.include?('-') # example elasticsearch-head
+                    if plugin.start_with?('elasticsearch-')
+                      plugin.gsub('elasticsearch-', '')
+                    elsif plugin.start_with?('es-')
+                      plugin.gsub('es-', '')
+                    else
+                      plugin
+                              end
+                  else
+                    plugin
+                  end
       else
         raise(Puppet::ParseError, "Unable to parse plugin name: #{plugin_name}")
       end

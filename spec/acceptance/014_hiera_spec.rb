@@ -2,10 +2,8 @@ require 'spec_helper_acceptance'
 
 # Here we put the more basic fundamental tests, ultra obvious stuff.
 
-describe "Hiera tests" do
-
-  describe "single instance" do
-
+describe 'Hiera tests' do
+  describe 'single instance' do
     it 'should run successfully' do
       write_hiera_config(['singleinstance'])
       pp = "class { 'elasticsearch': manage_repo => true, repo_version => '#{test_settings['repo_version']}', java_install => true }"
@@ -29,7 +27,7 @@ describe "Hiera tests" do
       its(:content) { should match /[0-9]+/ }
     end
 
-    describe "Elasticsearch serves requests on" do
+    describe 'Elasticsearch serves requests on' do
       it {
         curl_with_retries("check ES on #{test_settings['port_a']}", default, "http://localhost:#{test_settings['port_a']}/?pretty=true", 0)
       }
@@ -43,11 +41,9 @@ describe "Hiera tests" do
     describe file('/usr/share/elasticsearch/templates_import') do
       it { should be_directory }
     end
-
   end
 
-  describe "single instance with plugin" do
-
+  describe 'single instance with plugin' do
     it 'should run successfully' do
       write_hiera_config(['singleplugin'])
       pp = "class { 'elasticsearch': manage_repo => true, repo_version => '#{test_settings['repo_version']}', java_install => true }"
@@ -71,7 +67,7 @@ describe "Hiera tests" do
       its(:content) { should match /[0-9]+/ }
     end
 
-    describe "Elasticsearch serves requests on" do
+    describe 'Elasticsearch serves requests on' do
       it {
         curl_with_retries("check ES on #{test_settings['port_a']}", default, "http://localhost:#{test_settings['port_a']}/?pretty=true", 0)
       }
@@ -87,18 +83,15 @@ describe "Hiera tests" do
     end
 
     it 'make sure the directory exists' do
-      shell('ls /usr/share/elasticsearch/plugins/head/', {:acceptable_exit_codes => 0})
+      shell('ls /usr/share/elasticsearch/plugins/head/', :acceptable_exit_codes => 0)
     end
 
     it 'make sure elasticsearch reports it as existing' do
       curl_with_retries('validated plugin as installed', default, "http://localhost:#{test_settings['port_a']}/_nodes/?plugin | grep head", 0)
     end
-
   end
 
-  describe "multiple instances" do
-
-
+  describe 'multiple instances' do
     it 'should run successfully' do
       write_hiera_config(['multipleinstances'])
       pp = "class { 'elasticsearch': manage_repo => true, repo_version => '#{test_settings['repo_version']}', java_install => true }"
@@ -153,12 +146,9 @@ describe "Hiera tests" do
       it { should be_file }
       it { should contain 'name: es-02' }
     end
-
   end
 
-
-  describe "Cleanup" do
-
+  describe 'Cleanup' do
     it 'should run successfully' do
       pp = "class { 'elasticsearch': ensure => 'absent' }
            "
@@ -174,7 +164,5 @@ describe "Hiera tests" do
       it { should_not be_enabled }
       it { should_not be_running }
     end
-
   end
-
 end

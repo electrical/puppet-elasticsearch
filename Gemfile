@@ -6,7 +6,9 @@ gem 'puppet', puppetversion, :require => false
 gem 'beaker'
 gem 'beaker-rspec'
 gem 'metadata-json-lint'
-gem 'rspec-puppet'
+
+gem 'rspec-puppet', :require => false, :git => 'https://github.com/rodjek/rspec-puppet.git'
+gem 'puppet-lint', :require => false, :git => 'https://github.com/rodjek/puppet-lint.git'
 
 gem 'pry'
 gem 'docker-api', '~> 1.0'
@@ -15,11 +17,11 @@ gem 'ci_reporter_rspec'
 gem 'rspec', '~> 3.0'
 gem 'rake'
 gem 'puppet-doc-lint'
-gem 'puppet-lint'
 gem 'puppetlabs_spec_helper'
 gem 'puppet-syntax'
 gem 'rspec-puppet-facts'
 gem 'webmock'
+gem 'rubocop', '~> 0.39', :require => false
 
 # Extra Puppet-lint gems
 gem 'puppet-lint-appends-check', :require => false

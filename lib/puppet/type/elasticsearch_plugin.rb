@@ -1,7 +1,6 @@
 Puppet::Type.newtype(:elasticsearch_plugin) do
+  @doc = 'Plugin installation type'
 
-  @doc = "Plugin installation type"
-  
   ensurable do
     defaultvalues
     defaultto :present
@@ -31,5 +30,4 @@ Puppet::Type.newtype(:elasticsearch_plugin) do
   newparam(:install_options) do
     desc 'Installation options'
   end
-
 end

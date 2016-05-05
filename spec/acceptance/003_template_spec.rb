@@ -1,13 +1,11 @@
 require 'spec_helper_acceptance'
 
-describe "elasticsearch template define:" do
-
+describe 'elasticsearch template define:' do
   shell("mkdir -p #{default['distmoduledir']}/another/files")
   shell("echo '#{test_settings['good_json']}' >> #{default['distmoduledir']}/another/files/good.json")
   shell("echo '#{test_settings['bad_json']}' >> #{default['distmoduledir']}/another/files/bad.json")
 
-  describe "Insert a template with valid json content" do
-
+  describe 'Insert a template with valid json content' do
     it 'should run successfully' do
       pp = "class { 'elasticsearch': config => { 'node.name' => 'elasticsearch001', 'cluster.name' => '#{test_settings['cluster_name']}' }, manage_repo => true, repo_version => '#{test_settings['repo_version']}', java_install => true }
           elasticsearch::instance { 'es-01': config => { 'node.name' => 'elasticsearch001', 'http.port' => '#{test_settings['port_a']}' } }
@@ -24,8 +22,7 @@ describe "elasticsearch template define:" do
   end
 
   if fact('puppetversion') =~ /3\.[2-9]\./
-    describe "Insert a template with bad json content" do
-
+    describe 'Insert a template with bad json content' do
       it 'run should fail' do
         pp = "class { 'elasticsearch': config => { 'node.name' => 'elasticsearch001', 'cluster.name' => '#{test_settings['cluster_name']}' }, manage_repo => true, repo_version => '#{test_settings['repo_version']}', java_install => true }
              elasticsearch::instance { 'es-01': config => { 'node.name' => 'elasticsearch001', 'http.port' => '#{test_settings['port_a']}' } }
@@ -33,16 +30,11 @@ describe "elasticsearch template define:" do
 
         apply_manifest(pp, :expect_failures => true)
       end
-
     end
 
-  else
-    # The exit codes have changes since Puppet 3.2x
-    # Since beaker expectations are based on the most recent puppet code All runs on previous versions fails.
   end
 
-  describe "module removal" do
-
+  describe 'module removal' do
     it 'should run successfully' do
       pp = "class { 'elasticsearch': ensure => 'absent' }
             elasticsearch::instance{ 'es-01': ensure => 'absent' }
@@ -63,8 +55,5 @@ describe "elasticsearch template define:" do
       it { should_not be_enabled }
       it { should_not be_running }
     end
-
   end
-
-
 end

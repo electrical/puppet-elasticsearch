@@ -1,9 +1,8 @@
 require 'spec_helper'
 
 describe 'elasticsearch', :type => 'class' do
-
   default_params = {
-    :config  => { 'node.name' => 'foo' }
+    :config => { 'node.name' => 'foo' }
   }
 
   facts = {
@@ -13,21 +12,16 @@ describe 'elasticsearch', :type => 'class' do
     :operatingsystemmajrelease => '6'
   }
 
-  let (:params) do
-    default_params.merge({ })
+  let(:params) do
+    default_params.merge({})
   end
 
-  context "Hiera" do
-  
+  context 'Hiera' do
     context 'when specifying instances to create' do
-
       context 'a single instance' do
-
-        let (:facts) {
-          facts.merge({
-            :scenario => 'singleinstance',
-            :common => ''
-          })
+        let(:facts) {
+          facts.merge(:scenario => 'singleinstance',
+                      :common => '')
         }
 
         it { should contain_elasticsearch__instance('es-01').with(:config => { 'node.name' => 'es-01' }) }
@@ -44,16 +38,12 @@ describe 'elasticsearch', :type => 'class' do
         it { should contain_file('/etc/elasticsearch/es-01/scripts').with(:target => '/usr/share/elasticsearch/scripts') }
         it { should contain_datacat_fragment('main_config_es-01') }
         it { should contain_datacat('/etc/elasticsearch/es-01/elasticsearch.yml') }
-
       end
 
       context 'multiple instances' do
-
-        let (:facts) {
-          facts.merge({
-            :scenario => 'multipleinstances',
-            :common => ''
-          })
+        let(:facts) {
+          facts.merge(:scenario => 'multipleinstances',
+                      :common => '')
         }
 
         it { should contain_elasticsearch__instance('es-01').with(:config => { 'node.name' => 'es-01' }) }
@@ -73,7 +63,6 @@ describe 'elasticsearch', :type => 'class' do
         it { should contain_datacat_fragment('main_config_es-01') }
         it { should contain_datacat('/etc/elasticsearch/es-01/elasticsearch.yml') }
 
-
         it { should contain_elasticsearch__instance('es-02').with(:config => { 'node.name' => 'es-02' }) }
         it { should contain_elasticsearch__service('es-02') }
         it { should contain_elasticsearch__service__init('es-02') }
@@ -90,67 +79,47 @@ describe 'elasticsearch', :type => 'class' do
         it { should contain_file('/etc/elasticsearch/es-02/scripts').with(:target => '/usr/share/elasticsearch/scripts') }
         it { should contain_datacat_fragment('main_config_es-02') }
         it { should contain_datacat('/etc/elasticsearch/es-02/elasticsearch.yml') }
-
-
       end
-
     end
 
     context 'when we haven\'t specfied any instances to create' do
-
-      let (:facts) {
-        facts.merge({
-          :scenario => '',
-          :common => ''
-        })
+      let(:facts) {
+        facts.merge(:scenario => '',
+                    :common => '')
       }
 
       it { should_not contain_elasticsearch__instance }
-
     end
 
     # Hiera Plugin creation.
 
     context 'when specifying plugins to create' do
-
-      let (:facts) {
-        facts.merge({
-          :scenario => 'singleplugin',
-          :common => ''
-        })
+      let(:facts) {
+        facts.merge(:scenario => 'singleplugin',
+                    :common => '')
       }
 
-      it { should contain_elasticsearch__plugin('mobz/elasticsearch-head/1.0.0').with(:ensure => 'present', :module_dir => 'head', :instances => ['es-01'] ) }
+      it { should contain_elasticsearch__plugin('mobz/elasticsearch-head/1.0.0').with(:ensure => 'present', :module_dir => 'head', :instances => ['es-01']) }
       it { should contain_elasticsearch_plugin('mobz/elasticsearch-head/1.0.0') }
-
     end
 
     context 'when we haven\'t specified any plugins to create' do
-
-      let (:facts) {
-        facts.merge({
-          :scenario => '',
-          :common => ''
-        })
+      let(:facts) {
+        facts.merge(:scenario => '',
+                    :common => '')
       }
 
       it { should_not contain_elasticsearch__plugin }
-
     end
 
-    context "multiple instances using hiera_merge" do
-
-      let (:params) {
-        default_params.merge({
-        :instances_hiera_merge => true
-        })
+    context 'multiple instances using hiera_merge' do
+      let(:params) {
+        default_params.merge(:instances_hiera_merge => true)
       }
 
-      let (:facts) {
-        facts.merge({
-          :common => 'defaultinstance',
-          :scenario => 'singleinstance'
-        })
+      let(:facts) {
+        facts.merge(:common => 'defaultinstance',
+                    :scenario => 'singleinstance')
       }
 
       it { should contain_elasticsearch__instance('default').with(:config => { 'node.name' => 'default' }) }
@@ -170,7 +139,6 @@ describe 'elasticsearch', :type => 'class' do
       it { should contain_datacat_fragment('main_config_default') }
       it { should contain_datacat('/etc/elasticsearch/default/elasticsearch.yml') }
 
-
       it { should contain_elasticsearch__instance('es-01').with(:config => { 'node.name' => 'es-01' }) }
       it { should contain_elasticsearch__service('es-01') }
       it { should contain_elasticsearch__service__init('es-01') }
@@ -187,10 +155,6 @@ describe 'elasticsearch', :type => 'class' do
       it { should contain_file('/etc/elasticsearch/es-01/scripts').with(:target => '/usr/share/elasticsearch/scripts') }
       it { should contain_datacat_fragment('main_config_es-01') }
       it { should contain_datacat('/etc/elasticsearch/es-01/elasticsearch.yml') }
-
-
     end
-
   end
-
 end

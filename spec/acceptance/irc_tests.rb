@@ -1,13 +1,11 @@
 require 'spec_helper_acceptance'
 
-describe "Integration testing" do
-
+describe 'Integration testing' do
   shell("mkdir -p #{default['distmoduledir']}/another/files")
   shell("echo '#{test_settings['good_json']}' >> #{default['distmoduledir']}/another/files/good.json")
   shell("echo '#{test_settings['bad_json']}' >> #{default['distmoduledir']}/another/files/bad.json")
 
-  describe "Setup Elasticsearch", :main => true do
-
+  describe 'Setup Elasticsearch', :main => true do
     it 'should run successfully' do
       pp = "class { 'elasticsearch': config => { 'cluster.name' => '#{test_settings['cluster_name']}'}, java_install => true, package_url => '#{test_settings['irc_package']}' }
             elasticsearch::instance { 'es-01': config => { 'node.name' => 'elasticsearch001', 'http.port' => '#{test_settings['port_a']}' } }
@@ -17,7 +15,6 @@ describe "Integration testing" do
       apply_manifest(pp, :catch_failures => true)
       expect(apply_manifest(pp, :catch_failures => true).exit_code).to be_zero
     end
-
 
     describe service(test_settings['service_name_a']) do
       it { should be_enabled }
@@ -33,7 +30,7 @@ describe "Integration testing" do
       its(:content) { should match /[0-9]+/ }
     end
 
-    describe "Elasticsearch serves requests on" do
+    describe 'Elasticsearch serves requests on' do
       it {
         curl_with_retries("check ES on #{test_settings['port_a']}", default, "http://localhost:#{test_settings['port_a']}/?pretty=true", 0)
       }
@@ -47,13 +44,10 @@ describe "Integration testing" do
     describe file('/usr/share/elasticsearch/templates_import') do
       it { should be_directory }
     end
-
   end
 
-  describe "Template tests", :template => true do
-
-    describe "Insert a template with valid json content" do
-
+  describe 'Template tests', :template => true do
+    describe 'Insert a template with valid json content' do
       it 'should run successfully' do
         pp = "class { 'elasticsearch': config => { 'cluster.name' => '#{test_settings['cluster_name']}'}, java_install => true, package_url => '#{test_settings['irc_package']}' }
               elasticsearch::instance { 'es-01': config => { 'node.name' => 'elasticsearch001', 'http.port' => '#{test_settings['port_a']}' } }
@@ -70,8 +64,7 @@ describe "Integration testing" do
     end
 
     if fact('puppetversion') =~ /3\.[2-9]\./
-      describe "Insert a template with bad json content" do
-
+      describe 'Insert a template with bad json content' do
         it 'run should fail' do
           pp = "class { 'elasticsearch': config => { 'cluster.name' => '#{test_settings['cluster_name']}'}, java_install => true, package_url => '#{test_settings['irc_package']}' }
                 elasticsearch::instance { 'es-01': config => { 'node.name' => 'elasticsearch001', 'http.port' => '#{test_settings['port_a']}' } }
@@ -79,20 +72,13 @@ describe "Integration testing" do
 
           apply_manifest(pp, :expect_failures => true)
         end
-
       end
 
-    else
-      # The exit codes have changes since Puppet 3.2x
-      # Since beaker expectations are based on the most recent puppet code All runs on previous versions fails.
     end
-
   end
 
-  describe "Plugin tests", :plugin => true do
-
-    describe "Install a plugin from official repository" do
-
+  describe 'Plugin tests', :plugin => true do
+    describe 'Install a plugin from official repository' do
       it 'should run successfully' do
         pp = "class { 'elasticsearch': config => { 'cluster.name' => '#{test_settings['cluster_name']}'}, java_install => true, package_url => '#{test_settings['irc_package']}' }
               elasticsearch::instance { 'es-01': config => { 'node.name' => 'elasticsearch001', 'http.port' => '#{test_settings['port_a']}' } }
@@ -121,19 +107,17 @@ describe "Integration testing" do
       end
 
       it 'make sure the directory exists' do
-        shell('ls /usr/share/elasticsearch/plugins/license/', {:acceptable_exit_codes => 0})
+        shell('ls /usr/share/elasticsearch/plugins/license/', :acceptable_exit_codes => 0)
       end
 
       it 'make sure elasticsearch reports it as existing' do
         curl_with_retries('validated plugin as installed', default, "http://localhost:#{test_settings['port_a']}/_nodes/?plugin | grep license", 0)
       end
-
     end
 
     if fact('puppetversion') =~ /3\.[2-9]\./
 
-      describe "Install a non existing plugin" do
-
+      describe 'Install a non existing plugin' do
         it 'should run successfully' do
           pp = "class { 'elasticsearch': config => { 'cluster.name' => '#{test_settings['cluster_name']}'}, java_install => true, package_url => '#{test_settings['irc_package']}' }
                 elasticsearch::instance { 'es-01': config => { 'node.name' => 'elasticsearch001', 'http.port' => '#{test_settings['port_a']}' } }
@@ -141,14 +125,8 @@ describe "Integration testing" do
                "
           apply_manifest(pp, :expect_failures => true)
         end
-
       end
 
-    else
-      # The exit codes have changes since Puppet 3.2x
-      # Since beaker expectations are based on the most recent puppet code All runs on previous versions fails.
     end
-
   end
-
 end

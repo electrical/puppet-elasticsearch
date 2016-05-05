@@ -1,10 +1,8 @@
 require 'spec_helper_acceptance'
 
-describe "Service tests:" do
-
-  describe "Make sure we can manage the defaults file" do
-
-    context "Change the defaults file" do
+describe 'Service tests:' do
+  describe 'Make sure we can manage the defaults file' do
+    context 'Change the defaults file' do
       it 'should run successfully' do
         pp = "class { 'elasticsearch': manage_repo => true, repo_version => '#{test_settings['repo_version']}', java_install => true, config => { 'cluster.name' => '#{test_settings['cluster_name']}' }, init_defaults => { 'ES_JAVA_OPTS' => '\"-server -XX:+UseTLAB -XX:+CMSClassUnloadingEnabled\"' } }
               elasticsearch::instance { 'es-01': config => { 'node.name' => 'elasticsearch001' } }
@@ -40,20 +38,15 @@ describe "Service tests:" do
         }
       end
 
-      context "Make sure we have ES_USER=root" do
-
+      context 'Make sure we have ES_USER=root' do
         describe file(test_settings['defaults_file_a']) do
           its(:content) { should match /^ES_JAVA_OPTS="-server -XX:\+UseTLAB -XX:\+CMSClassUnloadingEnabled"/ }
         end
-
       end
-
     end
-
   end
 
-  describe "module removal" do
-
+  describe 'module removal' do
     it 'should run successfully' do
       pp = "class { 'elasticsearch': ensure => 'absent' }
             elasticsearch::instance{ 'es-01': ensure => 'absent' }
@@ -70,8 +63,5 @@ describe "Service tests:" do
       it { should_not be_enabled }
       it { should_not be_running }
     end
-
   end
-
-
 end

@@ -1,13 +1,10 @@
 require 'spec_helper_acceptance'
 
-describe "elasticsearch class:" do
-
-  describe "Run as a different user" do
-
+describe 'elasticsearch class:' do
+  describe 'Run as a different user' do
     it 'should run successfully' do
-
       write_hiera_config('')
-      shell("rm -rf /usr/share/elasticsearch")
+      shell('rm -rf /usr/share/elasticsearch')
       pp = "user { 'esuser': ensure => 'present', groups => ['esgroup', 'esuser'] }
             group { 'esuser': ensure => 'present' }
             group { 'esgroup': ensure => 'present' }
@@ -19,7 +16,6 @@ describe "elasticsearch class:" do
       apply_manifest(pp, :catch_failures => true)
       expect(apply_manifest(pp, :catch_failures => true).exit_code).to be_zero
     end
-
 
     describe service(test_settings['service_name_a']) do
       it { should be_enabled }
@@ -62,13 +58,9 @@ describe "elasticsearch class:" do
       it { should be_directory }
       it { should be_owned_by 'esuser' }
     end
-
-
   end
 
-
-  describe "Cleanup" do
-
+  describe 'Cleanup' do
     it 'should run successfully' do
       pp = "class { 'elasticsearch': ensure => 'absent' }
             elasticsearch::instance{ 'es-01': ensure => 'absent' } ->
@@ -86,7 +78,5 @@ describe "elasticsearch class:" do
       it { should_not be_enabled }
       it { should_not be_running }
     end
-
   end
-
 end

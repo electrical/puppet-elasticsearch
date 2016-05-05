@@ -18,7 +18,7 @@ module Puppet
       #
       # @return true if the connection is successful, false otherwise.
       def attempt_connection
-        Timeout::timeout(Puppet[:configtimeout]) do
+        Timeout.timeout(Puppet[:configtimeout]) do
           begin
             TCPSocket.new(@instance_server, @instance_port).close
             true
@@ -33,4 +33,3 @@ module Puppet
     end
   end
 end
-
